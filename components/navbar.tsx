@@ -104,7 +104,7 @@ export const Navbar = () => {
         <Link isExternal aria-label="Github" href={siteConfig.links.github}>
           <GithubIcon className="text-default-500" />
         </Link>
-        <Button
+        <Button radius="sm" className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
           onClick={() =>
             connect(async () => {
               const metamask = createWallet("io.metamask"); // pass the wallet id
