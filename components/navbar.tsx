@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -24,7 +26,8 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
-import { ConnectButton } from "thirdweb/react";
+import { ConnectButton, useConnect } from "thirdweb/react";
+import { createWallet, injectedProvider } from "thirdweb/wallets";
 import { client } from "@/app/client";
 
 export const Navbar = () => {
@@ -48,6 +51,7 @@ export const Navbar = () => {
       type="search"
     />
   );
+  const { connect, isConnecting, error } = useConnect();
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -64,7 +68,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -100,8 +104,31 @@ export const Navbar = () => {
         <Link isExternal aria-label="Github" href={siteConfig.links.github}>
           <GithubIcon className="text-default-500" />
         </Link>
-        
-        <ConnectButton client={client} />
+        <Button
+          onClick={() =>
+            connect(async () => {
+              const metamask = createWallet("io.metamask"); // pass the wallet id
+
+              // if user has metamask installed, connect to it
+              if (injectedProvider("io.metamask")) {
+                await metamask.connect({ client });
+              }
+
+              // open wallet connect modal so user can scan the QR code and connect
+              else {
+                await metamask.connect({
+                  client,
+                  walletConnect: { showQrModal: true },
+                });
+              }
+
+              // return the wallet
+              return metamask;
+            })
+          }
+        >
+          Connect
+        </Button>
       </NavbarContent>
 
       <NavbarMenu>
@@ -114,8 +141,8 @@ export const Navbar = () => {
                   index === 2
                     ? "primary"
                     : index === siteConfig.navMenuItems.length - 1
-                      ? "danger"
-                      : "foreground"
+                    ? "danger"
+                    : "foreground"
                 }
                 href="#"
                 size="lg"
