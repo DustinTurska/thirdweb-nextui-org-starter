@@ -26,7 +26,7 @@ import {
   SearchIcon,
   Logo,
 } from "@/components/icons";
-import { ConnectButton, useConnect } from "thirdweb/react";
+import { ConnectButton, useConnect, useConnectModal } from "thirdweb/react";
 import { createWallet, injectedProvider } from "thirdweb/wallets";
 import { client } from "@/app/client";
 
@@ -51,7 +51,12 @@ export const Navbar = () => {
       type="search"
     />
   );
-  const { connect, isConnecting, error } = useConnect();
+  const { connect, isConnecting } = useConnectModal();
+
+  async function handleConnect() {
+    const wallet = await connect({ client }); // opens the connect modal
+    console.log("connected to", wallet);
+  }
 
   return (
     <NextUINavbar maxWidth="xl" position="sticky">
@@ -105,27 +110,7 @@ export const Navbar = () => {
           <GithubIcon className="text-default-500" />
         </Link>
         <Button radius="sm" className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
-          onClick={() =>
-            connect(async () => {
-              const metamask = createWallet("io.metamask"); // pass the wallet id
-
-              // if user has metamask installed, connect to it
-              if (injectedProvider("io.metamask")) {
-                await metamask.connect({ client });
-              }
-
-              // open wallet connect modal so user can scan the QR code and connect
-              else {
-                await metamask.connect({
-                  client,
-                  walletConnect: { showQrModal: true },
-                });
-              }
-
-              // return the wallet
-              return metamask;
-            })
-          }
+          onClick={handleConnect}
         >
           Connect
         </Button>
