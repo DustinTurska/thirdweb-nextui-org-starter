@@ -16,7 +16,7 @@ export const siteConfig = {
     },
     {
       label: "Pricing",
-      href: "/https://thirdweb.com/pricing",
+      href: "https://thirdweb.com/pricing",
       target: "_blank",
       rel: "noopener noreferrer",
     },
