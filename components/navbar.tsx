@@ -82,7 +82,32 @@ export const Navbar = () => {
           </Link>
         </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <ConnectButton client={client} />
+          {/* <ConnectButton client={client} /> */}
+        {activeAccount ? (
+          <Button
+            radius="sm"
+            className="bg-black"
+            size="md"
+            onClick={handleConnect}
+          >
+            <div className="rounded-full overflow-hidden">
+              <Blobbie address={activeAccount.address} size={24} />
+            </div>
+            <span>
+              {activeAccount.address.slice(0, 6)}...
+              {activeAccount.address.slice(-4)}
+            </span>
+          </Button>
+        ) : (
+          <Button
+            radius="sm"
+            className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
+            onClick={handleConnect}
+            size="md"
+          >
+            Connect
+          </Button>
+        )}
         </NavbarItem>
       </NavbarContent>
 
