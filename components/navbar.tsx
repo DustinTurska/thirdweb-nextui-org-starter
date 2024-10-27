@@ -3,11 +3,8 @@
 import {
   Navbar as NextUINavbar,
   NavbarContent,
-  NavbarMenu,
-  NavbarMenuToggle,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import { Kbd } from "@nextui-org/kbd";
@@ -22,36 +19,16 @@ import {
   TwitterIcon,
   GithubIcon,
   DiscordIcon,
-  HeartFilledIcon,
-  SearchIcon,
   Logo,
 } from "@/components/icons";
-import { ConnectButton, useConnect, useConnectModal } from "thirdweb/react";
-import { createWallet, injectedProvider } from "thirdweb/wallets";
+import { ConnectButton, useConnectModal, useActiveAccount } from "thirdweb/react";
 import { client } from "@/app/client";
 
 export const Navbar = () => {
-  const searchInput = (
-    <Input
-      aria-label="Search"
-      classNames={{
-        inputWrapper: "bg-default-100",
-        input: "text-sm",
-      }}
-      endContent={
-        <Kbd className="hidden lg:inline-block" keys={["command"]}>
-          K
-        </Kbd>
-      }
-      labelPlacement="outside"
-      placeholder="Search..."
-      startContent={
-        <SearchIcon className="text-base text-default-400 pointer-events-none flex-shrink-0" />
-      }
-      type="search"
-    />
-  );
+
   const { connect, isConnecting } = useConnectModal();
+
+  const activeAccount = useActiveAccount();
 
   async function handleConnect() {
     const wallet = await connect({ client }); // opens the connect modal
@@ -109,35 +86,25 @@ export const Navbar = () => {
         <Link isExternal aria-label="Github" href={siteConfig.links.github}>
           <GithubIcon className="text-default-500" />
         </Link>
-        <Button radius="sm" className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
-          onClick={handleConnect}
-        >
-          Connect
-        </Button>
+        {activeAccount ? (
+          <Button
+            radius="sm"
+            className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
+            size="sm"
+          >
+            {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)}
+          </Button>
+        ) : (
+          <Button
+            radius="sm"
+            className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
+            onClick={handleConnect}
+            size="sm"
+          >
+            Connect
+          </Button>
+        )}
       </NavbarContent>
-
-      <NavbarMenu>
-        {searchInput}
-        <div className="mx-4 mt-2 flex flex-col gap-2">
-          {siteConfig.navMenuItems.map((item, index) => (
-            <NavbarMenuItem key={`${item}-${index}`}>
-              <Link
-                color={
-                  index === 2
-                    ? "primary"
-                    : index === siteConfig.navMenuItems.length - 1
-                    ? "danger"
-                    : "foreground"
-                }
-                href="#"
-                size="lg"
-              >
-                {item.label}
-              </Link>
-            </NavbarMenuItem>
-          ))}
-        </div>
-      </NavbarMenu>
     </NextUINavbar>
   );
 };
