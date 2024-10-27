@@ -7,32 +7,36 @@ import {
   NavbarItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import { link as linkStyles } from "@nextui-org/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
+import { TwitterIcon, GithubIcon, DiscordIcon, Logo } from "@/components/icons";
 import {
-  TwitterIcon,
-  GithubIcon,
-  DiscordIcon,
-  Logo,
-} from "@/components/icons";
-import { ConnectButton, useConnectModal, useActiveAccount } from "thirdweb/react";
+  ConnectButton,
+  useConnectModal,
+  useActiveAccount,
+  Blobbie,
+  useWalletDetailsModal,
+} from "thirdweb/react";
 import { client } from "@/app/client";
 
 export const Navbar = () => {
-
   const { connect, isConnecting } = useConnectModal();
-
   const activeAccount = useActiveAccount();
+  const detailsModal = useWalletDetailsModal();
 
   async function handleConnect() {
-    const wallet = await connect({ client }); // opens the connect modal
-    console.log("connected to", wallet);
+    if (activeAccount) {
+      // If an account is already connected, open the wallet details modal
+      detailsModal.open({ client });
+    } else {
+      // If no account is connected, connect
+      const wallet = await connect({ client });
+      console.log("connected to", wallet);
+    }
   }
 
   return (
@@ -84,15 +88,22 @@ export const Navbar = () => {
 
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <Link isExternal aria-label="Github" href={siteConfig.links.github}>
-          <GithubIcon className="text-default-500" />
+          {/* <GithubIcon className="text-default-500" /> */}
         </Link>
         {activeAccount ? (
           <Button
             radius="sm"
-            className="bg-gradient-to-tr from-pink-500 to-purple-500 text-white shadow-lg"
+            className="bg-black"
             size="sm"
+            onClick={handleConnect}
           >
-            {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)}
+            <div className="rounded-full overflow-hidden">
+              <Blobbie address={activeAccount.address} size={24} />
+            </div>
+            <span>
+              {activeAccount.address.slice(0, 6)}...
+              {activeAccount.address.slice(-4)}
+            </span>
           </Button>
         ) : (
           <Button
