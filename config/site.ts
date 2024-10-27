@@ -1,7 +1,7 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: "Next.js + NextUI",
+  name: "thirdweb SDK + NextUI",
   description: "Make beautiful websites regardless of your design experience.",
   navItems: [
     {
@@ -10,19 +10,27 @@ export const siteConfig = {
     },
     {
       label: "Docs",
-      href: "/docs",
+      href: "https://portal.thirdweb.com/",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
     {
       label: "Pricing",
-      href: "/pricing",
+      href: "/https://thirdweb.com/pricing",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
     {
       label: "Blog",
-      href: "/blog",
+      href: "https://blog.thirdweb.com/guides/",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
     {
       label: "About",
-      href: "/about",
+      href: "https://thirdweb.com/mission",
+      target: "_blank",
+      rel: "noopener noreferrer",
     },
   ],
   navMenuItems: [
@@ -60,10 +68,9 @@ export const siteConfig = {
     },
   ],
   links: {
-    github: "https://github.com/nextui-org/nextui",
-    twitter: "https://twitter.com/getnextui",
-    docs: "https://nextui.org",
-    discord: "https://discord.gg/9b6yyZKmH4",
-    sponsor: "https://patreon.com/jrgarciadev",
+    github: "https://github.com/thirdweb-example",
+    twitter: "https://x.com/thirdweb",
+    docs: "https://portal.thirdweb.com/",
+    discord: "https://discord.gg/thirdweb",
   },
 };
